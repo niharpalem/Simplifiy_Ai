@@ -6,10 +6,9 @@ A concise, structured collection of my personal understanding of AI/ML theory, r
 
 - 🧠 **Theory notes** simplifying research papers into digestible concepts  
 - 🔢 **Mathematical breakdowns** of algorithms, loss functions, and derivations  
-- 🧩 **Code implementations** across deep learning, RL, PPO, RLHF, transformers, and vision  
+- 🧩 **Code implementations** across deep learning, RL,VLM, Diffusion Models, Agentic Systems
 - 🔬 **Experiments and ablations** demonstrating model behaviors and insights  
 - 🧪 **Step-by-step walkthroughs** explaining architectures and training loops  
-- 📄 **Project examples** from multimodal systems, text generation, LLMs, RL agents, and more  
 - ⚙️ **Utility scripts** and reusable components for training and evaluation  
 
 ---
