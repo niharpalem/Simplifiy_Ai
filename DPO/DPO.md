@@ -1,45 +1,71 @@
 ```mermaid
 flowchart TD
   Start([DPO Training Example])
-  Start --> Input[Input: What is 2+2?<br/>Chosen answer yw: 4<br/>Rejected answer yl: 3]
+  Start --> Input[Input: What is 2+2?<br/>Chosen answer yw: 4<br/>Rejected answer yl: 3<br/>Temperature β: 1.0]
   
-  Input --> Step1[Step 1: Evaluate both models]
-  Step1 --> Ref[Reference Model πref FIXED<br/>log πref of yw = -1.609<br/>log πref of yl = -2.303]
-  Step1 --> Pol[Policy Model πθ TRAINABLE<br/>log πθ of yw = -2.996<br/>log πθ of yl = -1.897]
+  Input --> Formula[DPO Loss Formula:<br/>L = −log σ of β·log πθ of yw / πref of yw − β·log πθ of yl / πref of yl]
   
-  Ref --> Step2[Step 2: Compute advantages<br/>A of y = log πθ of y − log πref of y]
+  Formula --> Step1[Step 1: Get log probabilities]
+  
+  Step1 --> Ref[Reference Model πref FIXED<br/>log πref of yw given x = -1.609<br/>log πref of yl given x = -2.303]
+  
+  Step1 --> Pol[Policy Model πθ TRAINABLE<br/>log πθ of yw given x = -2.996<br/>log πθ of yl given x = -1.897]
+  
+  Ref --> Step2[Step 2: Compute log ratios<br/>log ratio = log πθ − log πref]
   Pol --> Step2
   
-  Step2 --> Adv[A of yw = -2.996 − -1.609 = -1.387<br/>A of yl = -1.897 − -2.303 = +0.406]
+  Step2 --> Ratios[For chosen yw:<br/>β·log πθ of yw / πref of yw = 1.0 · -2.996 − -1.609 = -1.387<br/><br/>For rejected yl:<br/>β·log πθ of yl / πref of yl = 1.0 · -1.897 − -2.303 = +0.406]
   
-  Adv --> Step3[Step 3: Compute pair difference<br/>Δ = β · A of yw − A of yl<br/>with β = 1.0]
+  Ratios --> Step3[Step 3: Compute difference Δ<br/>Δ = log ratio of yw − log ratio of yl]
   
-  Step3 --> Delta[Δ = -1.387 − 0.406 = -1.793]
+  Step3 --> Delta[Δ = -1.387 − 0.406 = -1.793<br/><br/>Negative Δ means policy prefers WRONG answer!]
   
-  Delta --> Step4[Step 4: Compute loss<br/>L = −log of 1 / 1 + exp of −Δ]
+  Delta --> Step4[Step 4: Apply sigmoid<br/>σ of Δ = 1 / 1 + exp of −Δ]
   
-  Step4 --> Loss[L = −log of 1 / 1 + exp of 1.793<br/>L = −log of 0.143<br/>L = 1.946]
+  Step4 --> Sigmoid[σ of -1.793 = 1 / 1 + exp of 1.793<br/>= 1 / 1 + 6.00<br/>≈ 0.143<br/><br/>Only 14.3% confidence in chosen answer]
   
-  Loss --> Step5[Step 5: Update πθ with gradient descent<br/>πref stays fixed]
+  Sigmoid --> Step5[Step 5: Compute loss<br/>L = −log σ of Δ]
   
-  Step5 --> After[After Update:<br/>log πθ of yw = -1.715 improved<br/>log πθ of yl = -2.526 worsened]
+  Step5 --> Loss[L = −log of 0.143 = 1.946<br/><br/>High loss = bad predictions]
   
-  After --> Verify[Verify: Recompute loss]
-  Verify --> NewAdv[New A of yw = -0.106<br/>New A of yl = -0.223<br/>New Δ = +0.118]
+  Loss --> Step6[Step 6: Backprop gradient ∂L/∂θ<br/>Gradient increases log πθ of yw<br/>Gradient decreases log πθ of yl]
   
-  NewAdv --> NewLoss[New L = 0.635]
+  Step6 --> Update[Step 7: Gradient descent update<br/>θ ← θ − learning_rate · ∂L/∂θ<br/>πref stays FIXED]
   
-  NewLoss --> Result([Success!<br/>Loss: 1.946 → 0.635<br/>Model prefers correct answer])
+  Update --> After[After Update:<br/>log πθ of yw = -1.715 improved!<br/>log πθ of yl = -2.526 worsened!]
   
-  style Start fill:#e3f2fd,stroke:#1976d2,stroke-width:2px
-  style Input fill:#fff3e0
-  style Step1 fill:#f3e5f5
-  style Ref fill:#e8f5e9
-  style Pol fill:#ffebee
-  style Step2 fill:#fff9c4
-  style Step3 fill:#ffe0b2
-  style Step4 fill:#ffccbc
-  style Step5 fill:#ce93d8
-  style After fill:#c8e6c9
-  style Verify fill:#b2dfdb
-  style Result fill:#a5d6a7,stroke:#2e7d32,stroke-width:3px
+  After --> Verify[Verify: Recompute using same formula]
+  
+  Verify --> NewRatios[New log ratios:<br/>yw: -1.715 − -1.609 = -0.106<br/>yl: -2.526 − -2.303 = -0.223]
+  
+  NewRatios --> NewDelta[New Δ = -0.106 − -0.223 = +0.118<br/>Now POSITIVE = prefers correct answer!]
+  
+  NewDelta --> NewSig[New σ of +0.118 ≈ 0.529<br/>52.9% confidence - much better!]
+  
+  NewSig --> NewLoss[New L = −log of 0.529 = 0.635]
+  
+  NewLoss --> Result([Training Success!<br/>Loss: 1.946 → 0.635<br/>Δ: -1.793 → +0.118<br/>Model now prefers correct answer 4])
+  
+  style Start fill:#555,stroke:#333,stroke-width:2px,color:#fff
+  style Input fill:#666,stroke:#333,stroke-width:1px,color:#fff
+  style Formula fill:#444,stroke:#333,stroke-width:2px,color:#fff
+  style Step1 fill:#666,stroke:#333,stroke-width:1px,color:#fff
+  style Ref fill:#666,stroke:#333,stroke-width:1px,color:#fff
+  style Pol fill:#666,stroke:#333,stroke-width:1px,color:#fff
+  style Step2 fill:#666,stroke:#333,stroke-width:1px,color:#fff
+  style Ratios fill:#666,stroke:#333,stroke-width:1px,color:#fff
+  style Step3 fill:#666,stroke:#333,stroke-width:1px,color:#fff
+  style Delta fill:#666,stroke:#333,stroke-width:1px,color:#fff
+  style Step4 fill:#666,stroke:#333,stroke-width:1px,color:#fff
+  style Sigmoid fill:#666,stroke:#333,stroke-width:1px,color:#fff
+  style Step5 fill:#666,stroke:#333,stroke-width:1px,color:#fff
+  style Loss fill:#666,stroke:#333,stroke-width:1px,color:#fff
+  style Step6 fill:#666,stroke:#333,stroke-width:1px,color:#fff
+  style Update fill:#666,stroke:#333,stroke-width:1px,color:#fff
+  style After fill:#666,stroke:#333,stroke-width:1px,color:#fff
+  style Verify fill:#666,stroke:#333,stroke-width:1px,color:#fff
+  style NewRatios fill:#666,stroke:#333,stroke-width:1px,color:#fff
+  style NewDelta fill:#666,stroke:#333,stroke-width:1px,color:#fff
+  style NewSig fill:#666,stroke:#333,stroke-width:1px,color:#fff
+  style NewLoss fill:#666,stroke:#333,stroke-width:1px,color:#fff
+  style Result fill:#555,stroke:#333,stroke-width:3px,color:#fff
