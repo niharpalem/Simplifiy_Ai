@@ -8,7 +8,7 @@ A comprehensive, practical guide to optimizing Large Language Models for efficie
 
 This guide is split into four main sections, each covering a critical aspect of LLM optimization:
 
-### 1. [KV Cache & Generation Optimization](./01_KV_Cache_and_Generation_Optimization.md)
+### 1. [KV Cache & Generation Optimization](./KV_Cache_&_Generation_Optimization.md)
 Learn how to speed up token generation and maximize GPU utilization.
 
 **Topics covered:**
@@ -21,7 +21,7 @@ Learn how to speed up token generation and maximize GPU utilization.
 
 ---
 
-### 2. [Attention Optimization](./02_Attention_Optimization.md)
+### 2. [Attention Optimization](./Attention_Optimization.md)
 Understand and solve the quadratic attention complexity problem.
 
 **Topics covered:**
@@ -33,7 +33,7 @@ Understand and solve the quadratic attention complexity problem.
 
 ---
 
-### 3. [Model Parallelism](./03_Model_Parallelism.md)
+### 3. [Model Parallelism](./Model_Parallelism.md)
 Scale models across multiple GPUs when they don't fit on one.
 
 **Topics covered:**
@@ -46,7 +46,7 @@ Scale models across multiple GPUs when they don't fit on one.
 
 ---
 
-### 4. [Quantization Techniques](./04_Quantization_Techniques.md)
+### 4. [Quantization Techniques](./Qunatization_techniques.md)
 Compress models to run on smaller hardware with minimal quality loss.
 
 **Topics covered:**
@@ -63,27 +63,27 @@ Compress models to run on smaller hardware with minimal quality loss.
 ### By Use Case
 
 **🏃‍♂️ I want faster inference:**
-- [Continuous Batching](./01_KV_Cache_and_Generation_Optimization.md#3-continuous-batching)
-- [Speculative Decoding](./01_KV_Cache_and_Generation_Optimization.md#4-speculative-decoding)
-- [Flash Attention](./02_Attention_Optimization.md#2-flash-attention)
+- [Continuous Batching](./KV_Cache_&_Generation_Optimization.md#3-continuous-batching)
+- [Speculative Decoding](./KV_Cache_&_Generation_Optimization.md#4-speculative-decoding)
+- [Flash Attention](./Attention_Optimization.md#2-flash-attention)
 
 **💾 I want to save memory:**
-- [Paged Attention](./02_Attention_Optimization.md#1-paged-attention)
-- [Quantization](./04_Quantization_Techniques.md)
-- [Tensor Parallelism](./03_Model_Parallelism.md#3-tensor-parallelism-tp)
+- [Paged Attention](./Attention_Optimization.md#1-paged-attention)
+- [Quantization](./Qunatization_techniques.md)
+- [Tensor Parallelism](./Model_Parallelism.md#3-tensor-parallelism-tp)
 
 **🖥️ I want to run on CPU/smaller hardware:**
-- [llama.cpp & GGUF](./04_Quantization_Techniques.md#llamacpp--gguf)
-- [INT4 Quantization](./04_Quantization_Techniques.md#int4-quantization)
+- [llama.cpp & GGUF](./Qunatization_techniques.md#llamacpp--gguf)
+- [INT4 Quantization](./Qunatization_techniques.md#int4-quantization)
 
 **🏗️ I want to train huge models:**
-- [3D Parallelism](./03_Model_Parallelism.md#4-combining-all-three-3d-parallelism)
-- [Data Parallelism](./03_Model_Parallelism.md#1-data-parallelism-dp)
+- [3D Parallelism](./Model_Parallelism.md#4-combining-all-three-3d-parallelism)
+- [Data Parallelism](./Model_Parallelism.md#1-data-parallelism-dp)
 
 **⚡ I want maximum throughput:**
-- [Continuous Batching](./01_KV_Cache_and_Generation_Optimization.md#3-continuous-batching)
-- [Flash + Paged Attention](./02_Attention_Optimization.md#paged-attention-vs-flash-attention)
-- [Tensor Parallelism](./03_Model_Parallelism.md#3-tensor-parallelism-tp)
+- [Continuous Batching](./KV_Cache_&_Generation_Optimization.md#3-continuous-batching)
+- [Flash + Paged Attention](./Attention_Optimization.md#paged-attention-vs-flash-attention)
+- [Tensor Parallelism](./Model_Parallelism.md#3-tensor-parallelism-tp)
 
 ---
 
@@ -191,19 +191,19 @@ Option 3: Quantization + Tensor Parallelism
 ## 🎓 Learning Path
 
 ### Beginner (Inference Focus)
-1. Start with [KV Cache](./01_KV_Cache_and_Generation_Optimization.md#1-kv-cache) - understand the basics
-2. Learn [Quantization formats](./04_Quantization_Techniques.md#precision-formats) - FP16, BF16, INT8
-3. Try [llama.cpp](./04_Quantization_Techniques.md#llamacpp--gguf) - run models locally
+1. Start with [KV Cache](./KV_Cache_&_Generation_Optimization.md#1-kv-cache) - understand the basics
+2. Learn [Quantization formats](./Qunatization_techniques.md#precision-formats) - FP16, BF16, INT8
+3. Try [llama.cpp](./Qunatization_techniques.md#llamacpp--gguf) - run models locally
 
 ### Intermediate (Optimization)
-1. Understand [Flash Attention](./02_Attention_Optimization.md#2-flash-attention) - why it's faster
-2. Learn [Continuous Batching](./01_KV_Cache_and_Generation_Optimization.md#3-continuous-batching) - maximize throughput
-3. Explore [LLM.int8()](./04_Quantization_Techniques.md#llmint8---mixed-precision-quantization) - practical quantization
+1. Understand [Flash Attention](./Attention_Optimization.md#2-flash-attention) - why it's faster
+2. Learn [Continuous Batching](./KV_Cache_&_Generation_Optimization.md#3-continuous-batching) - maximize throughput
+3. Explore [LLM.int8()](./Qunatization_techniques.md#llmint8---mixed-precision-quantization) - practical quantization
 
 ### Advanced (Scaling)
-1. Master [Tensor Parallelism](./03_Model_Parallelism.md#3-tensor-parallelism-tp) - split large models
-2. Understand [3D Parallelism](./03_Model_Parallelism.md#4-combining-all-three-3d-parallelism) - combine strategies
-3. Study [AWQ](./04_Quantization_Techniques.md#awq-activation-aware-weight-quantization) - advanced quantization
+1. Master [Tensor Parallelism](./Model_Parallelism.md#3-tensor-parallelism-tp) - split large models
+2. Understand [3D Parallelism](./Model_Parallelism.md#4-combining-all-three-3d-parallelism) - combine strategies
+3. Study [AWQ](./Qunatization_techniques.md#awq-activation-aware-weight-quantization) - advanced quantization
 
 ---
 
@@ -295,4 +295,4 @@ This guide is provided for educational purposes. Techniques and methods are base
 
 ---
 
-Ready to optimize your LLMs? Start with [KV Cache & Generation Optimization](./01_KV_Cache_and_Generation_Optimization.md)! 🚀
+Ready to optimize your LLMs? Start with [KV Cache & Generation Optimization](./KV_Cache_&_Generation_Optimization.md)! 🚀
