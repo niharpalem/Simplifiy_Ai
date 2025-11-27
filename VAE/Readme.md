@@ -19,7 +19,7 @@ VAE = Autoencoder + **organized latent space**
 ## 📄 Files
 
 - [`vae_notes_detailed.html`](./vae_notes_detailed.html) — VAE high level walkthrough (Training)
-- [`vae_notes_detailed.html`](./vae_walkthrough.html) — Simple examplewalkthrough of ow VAE works (Encoder -> latent space -> Deocoder)
+- [`vae_notes_detailed.html`](./vae_walkthrough.html) — Simple examplewalkthrough of how VAE works (Encoder -> latent space -> Deocoder)
 ## 🔗 Quick Links
 
 - [Interactive VAE Explainer](https://xnought.github.io/vae-explainer/) — Visual demo
