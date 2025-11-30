@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VAE Encoding Walkthrough - QwenImage</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e4e4e4;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #00d9ff, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 40px;
+            font-size: 1.1rem;
+        }
+        
+        .step {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #00d9ff, #a855f7);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: #1a1a2e;
+        }
+        
+        .step-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+        }
+        
+        .tensor-box {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            font-family: 'Fira Code', monospace;
+            border-left: 4px solid #00d9ff;
+        }
+        
+        .shape {
+            color: #00d9ff;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .dims {
+            color: #888;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+        
+        .arrow {
+            text-align: center;
+            font-size: 2rem;
+            color: #a855f7;
+            margin: 15px 0;
+        }
+        
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .channel-box {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+        }
+        
+        .channel-box.mean {
+            border-left: 4px solid #22c55e;
+        }
+        
+        .channel-box.logvar {
+            border-left: 4px solid #f59e0b;
+        }
+        
+        .channel-box.std {
+            border-left: 4px solid #ec4899;
+        }
+        
+        .channel-label {
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+        
+        .mean .channel-label { color: #22c55e; }
+        .logvar .channel-label { color: #f59e0b; }
+        .std .channel-label { color: #ec4899; }
+        
+        .math {
+            background: rgba(168, 85, 247, 0.2);
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: 'Fira Code', monospace;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+        
+        .math-var {
+            color: #a855f7;
+            font-weight: bold;
+        }
+        
+        .code {
+            background: #0d1117;
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+        
+        .code .keyword { color: #ff7b72; }
+        .code .func { color: #d2a8ff; }
+        .code .comment { color: #8b949e; }
+        .code .number { color: #79c0ff; }
+        
+        .highlight {
+            background: rgba(0, 217, 255, 0.2);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        
+        .split-visual {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .channel-strip {
+            display: flex;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        
+        .channel-cell {
+            width: 25px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+            color: #1a1a2e;
+        }
+        
+        .channel-cell.mean-cell { background: #22c55e; }
+        .channel-cell.logvar-cell { background: #f59e0b; }
+        
+        .example-calc {
+            background: rgba(34, 197, 94, 0.1);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+        
+        .example-calc h4 {
+            color: #22c55e;
+            margin-bottom: 15px;
+        }
+        
+        .calc-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 8px 0;
+            font-family: 'Fira Code', monospace;
+        }
+        
+        .calc-label {
+            width: 80px;
+            color: #888;
+        }
+        
+        .calc-value {
+            color: #00d9ff;
+        }
+        
+        .final-diagram {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 12px;
+            padding: 30px;
+            margin: 20px 0;
+        }
+        
+        .flow-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin: 10px 0;
+        }
+        
+        .flow-box {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-align: center;
+            min-width: 150px;
+        }
+        
+        .flow-box.input { border: 2px solid #3b82f6; }
+        .flow-box.encoder { border: 2px solid #8b5cf6; }
+        .flow-box.dist { border: 2px solid #22c55e; }
+        .flow-box.latent { border: 2px solid #f59e0b; }
+        .flow-box.decoder { border: 2px solid #ec4899; }
+        .flow-box.output { border: 2px solid #06b6d4; }
+        
+        .flow-arrow {
+            color: #666;
+            font-size: 1.5rem;
+        }
+        
+        .note {
+            background: rgba(245, 158, 11, 0.1);
+            border-left: 4px solid #f59e0b;
+            padding: 15px;
+            border-radius: 0 8px 8px 0;
+            margin: 15px 0;
+        }
+        
+        .note-title {
+            color: #f59e0b;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+            .split-visual {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>VAE Encoding Walkthrough</h1>
+        <p class="subtitle">QwenImage AutoencoderKL with an 8×8 RGB Image</p>
+
+        <!-- Step 0: Overview -->
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">0</div>
+                <div class="step-title">Architecture Overview</div>
+            </div>
+            
+            <div class="final-diagram">
+                <div class="flow-row">
+                    <div class="flow-box input">
+                        <div style="font-size: 0.8rem; color: #3b82f6;">Input</div>
+                        <div>[1, 3, 1, 8, 8]</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-box encoder">
+                        <div style="font-size: 0.8rem; color: #8b5cf6;">Encoder</div>
+                        <div>[1, 32, 1, 1, 1]</div>
+                    </div>
+                    <div class="flow-arrow">→</div>
+                    <div class="flow-box dist">
+                        <div style="font-size: 0.8rem; color: #22c55e;">Split μ/σ</div>
+                        <div>[1, 16, 1, 1, 1]</div>
+                    </div>
+                </div>
+                <div class="flow-row" style="margin-top: 20px;">
+                    <div class="flow-box output">
+                        <div style="font-size: 0.8rem; color: #06b6d4;">Output</div>
+                        <div>[1, 3, 1, 8, 8]</div>
+                    </div>
+                    <div class="flow-arrow">←</div>
+                    <div class="flow-box decoder">
+                        <div style="font-size: 0.8rem; color: #ec4899;">Decoder</div>
+                        <div>[1, 16, 1, 1, 1]</div>
+                    </div>
+                    <div class="flow-arrow">←</div>
+                    <div class="flow-box latent">
+                        <div style="font-size: 0.8rem; color: #f59e0b;">Sample z</div>
+                        <div>[1, 16, 1, 1, 1]</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="note">
+                <div class="note-title">Key Insight</div>
+                Encoder outputs <span class="highlight">32 channels</span> (16 for mean + 16 for logvar), but the latent z is only <span class="highlight">16 channels</span>.
+            </div>
+        </div>
+
+        <!-- Step 1: Input -->
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">1</div>
+                <div class="step-title">Input Image</div>
+            </div>
+            
+            <p>Start with an 8×8 RGB image (3 channels) with 1 frame:</p>
+            
+            <div class="tensor-box">
+                <div class="shape">[1, 3, 1, 8, 8]</div>
+                <div class="dims">Batch=1, Channels=3 (RGB), Frames=1, Height=8, Width=8</div>
+            </div>
+            
+            <div class="code">
+<span class="comment"># Input tensor</span>
+image = torch.randn(<span class="number">1</span>, <span class="number">3</span>, <span class="number">1</span>, <span class="number">8</span>, <span class="number">8</span>)
+<span class="comment"># Contains 8 × 8 × 3 = 192 pixel values</span>
+            </div>
+        </div>
+
+        <!-- Step 2: Encoder -->
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">2</div>
+                <div class="step-title">Encoder (CNN Compression)</div>
+            </div>
+            
+            <p>The encoder compresses spatially (8× downsampling) and expands channels to <strong>z_dim × 2 = 32</strong>:</p>
+            
+            <div class="tensor-box">
+                <div class="shape">[1, 3, 1, 8, 8] → [1, 32, 1, 1, 1]</div>
+                <div class="dims">8×8 spatial → 1×1 spatial (8× compression)</div>
+                <div class="dims">3 channels → 32 channels (for mean + logvar)</div>
+            </div>
+            
+            <div class="code">
+<span class="comment"># Encoder defined with z_dim * 2 output channels</span>
+self.encoder = QwenImageEncoder3d(
+    base_dim=<span class="number">96</span>,
+    out_channels=z_dim * <span class="number">2</span>,  <span class="comment"># 16 * 2 = 32</span>
+    ...
+)
+
+<span class="comment"># Forward pass</span>
+h = self.<span class="func">encoder</span>(image)      <span class="comment"># [1, 32, 1, 1, 1]</span>
+h = self.<span class="func">quant_conv</span>(h)       <span class="comment"># [1, 32, 1, 1, 1] (1×1 conv)</span>
+            </div>
+            
+            <div class="note">
+                <div class="note-title">Why 32 channels?</div>
+                The encoder predicts a <strong>probability distribution</strong> for each latent dimension. 
+                It needs to output both μ (mean) and log(σ²) (log-variance) for all 16 latent channels.
+            </div>
+        </div>
+
+        <!-- Step 3: Split -->
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">3</div>
+                <div class="step-title">DiagonalGaussianDistribution - The Split</div>
+            </div>
+            
+            <p>The 32 channels are split in half along the channel dimension:</p>
+            
+            <div class="split-visual">
+                <div>
+                    <div style="text-align: center; margin-bottom: 10px; color: #888;">32 channels from encoder</div>
+                    <div class="channel-strip">
+                        <div class="channel-cell mean-cell">0</div>
+                        <div class="channel-cell mean-cell">1</div>
+                        <div class="channel-cell mean-cell">2</div>
+                        <div class="channel-cell mean-cell">...</div>
+                        <div class="channel-cell mean-cell">14</div>
+                        <div class="channel-cell mean-cell">15</div>
+                        <div class="channel-cell logvar-cell">16</div>
+                        <div class="channel-cell logvar-cell">17</div>
+                        <div class="channel-cell logvar-cell">...</div>
+                        <div class="channel-cell logvar-cell">30</div>
+                        <div class="channel-cell logvar-cell">31</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="arrow">↓ torch.chunk(2, dim=1)</div>
+            
+            <div class="grid-container">
+                <div class="channel-box mean">
+                    <div class="channel-label">Mean (μ)</div>
+                    <div class="shape">[1, 16, 1, 1, 1]</div>
+                    <div style="margin-top: 10px; color: #888;">Channels 0-15</div>
+                    <div style="font-family: monospace; margin-top: 5px;">First half of encoder output</div>
+                </div>
+                <div class="channel-box logvar">
+                    <div class="channel-label">Log-Variance (log σ²)</div>
+                    <div class="shape">[1, 16, 1, 1, 1]</div>
+                    <div style="margin-top: 10px; color: #888;">Channels 16-31</div>
+                    <div style="font-family: monospace; margin-top: 5px;">Second half of encoder output</div>
+                </div>
+            </div>
+            
+            <div class="code">
+<span class="keyword">class</span> <span class="func">DiagonalGaussianDistribution</span>:
+    <span class="keyword">def</span> <span class="func">__init__</span>(self, parameters):
+        <span class="comment"># parameters shape: [1, 32, 1, 1, 1]</span>
+        
+        <span class="comment"># SPLIT: chunk into 2 parts along dim=1</span>
+        self.mean, self.logvar = torch.<span class="func">chunk</span>(parameters, <span class="number">2</span>, dim=<span class="number">1</span>)
+        <span class="comment"># mean:   [1, 16, 1, 1, 1]</span>
+        <span class="comment"># logvar: [1, 16, 1, 1, 1]</span>
+        
+        <span class="comment"># Clamp for numerical stability</span>
+        self.logvar = torch.<span class="func">clamp</span>(self.logvar, -<span class="number">30.0</span>, <span class="number">20.0</span>)
+            </div>
+        </div>
+
+        <!-- Step 4: Derive std -->
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">4</div>
+                <div class="step-title">Derive Standard Deviation</div>
+            </div>
+            
+            <p>Convert log-variance to standard deviation:</p>
+            
+            <div class="math">
+                <span class="math-var">σ</span> = exp(<span class="math-var">log(σ²)</span> / 2) = exp(<span class="math-var">logvar</span> × 0.5)
+            </div>
+            
+            <div class="grid-container">
+                <div class="channel-box logvar">
+                    <div class="channel-label">Log-Variance (logvar)</div>
+                    <div class="shape">[1, 16, 1, 1, 1]</div>
+                </div>
+                <div class="channel-box std">
+                    <div class="channel-label">Standard Deviation (σ)</div>
+                    <div class="shape">[1, 16, 1, 1, 1]</div>
+                </div>
+            </div>
+            
+            <div class="code">
+<span class="comment"># In DiagonalGaussianDistribution.__init__</span>
+self.std = torch.<span class="func">exp</span>(<span class="number">0.5</span> * self.logvar)
+self.var = torch.<span class="func">exp</span>(self.logvar)
+            </div>
+            
+            <div class="example-calc">
+                <h4>Concrete Example (Channel 0)</h4>
+                <div class="calc-row">
+                    <span class="calc-label">logvar:</span>
+                    <span class="calc-value">-1.0</span>
+                </div>
+                <div class="calc-row">
+                    <span class="calc-label">std:</span>
+                    <span class="calc-value">exp(-1.0 × 0.5) = exp(-0.5) = 0.606</span>
+                </div>
+                <div class="calc-row">
+                    <span class="calc-label">var:</span>
+                    <span class="calc-value">exp(-1.0) = 0.368</span>
+                </div>
+            </div>
+            
+            <div class="note">
+                <div class="note-title">Why use log-variance?</div>
+                Variance must be positive. Using log-variance and then exp() guarantees positivity and is more numerically stable during training.
+            </div>
+        </div>
+
+        <!-- Step 5: Sample -->
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">5</div>
+                <div class="step-title">Sample Latent z (Reparameterization Trick)</div>
+            </div>
+            
+            <p>Two options to get the latent z:</p>
+            
+            <div class="grid-container">
+                <div class="channel-box" style="border-left-color: #3b82f6;">
+                    <div class="channel-label" style="color: #3b82f6;">Option A: mode() - Deterministic</div>
+                    <div class="math" style="background: rgba(59, 130, 246, 0.2);">
+                        z = μ
+                    </div>
+                    <p style="color: #888; font-size: 0.9rem;">Just return the mean. Used during inference for reproducibility.</p>
+                </div>
+                <div class="channel-box" style="border-left-color: #ec4899;">
+                    <div class="channel-label" style="color: #ec4899;">Option B: sample() - Stochastic</div>
+                    <div class="math" style="background: rgba(236, 72, 153, 0.2);">
+                        z = μ + σ × ε &nbsp;&nbsp; where ε ~ N(0,1)
+                    </div>
+                    <p style="color: #888; font-size: 0.9rem;">Reparameterization trick. Used during training.</p>
+                </div>
+            </div>
+            
+            <div class="code">
+<span class="keyword">def</span> <span class="func">mode</span>(self):
+    <span class="comment"># Deterministic - just return mean</span>
+    <span class="keyword">return</span> self.mean
+
+<span class="keyword">def</span> <span class="func">sample</span>(self, generator=<span class="keyword">None</span>):
+    <span class="comment"># Reparameterization trick</span>
+    epsilon = <span class="func">randn_tensor</span>(self.mean.shape, ...)  <span class="comment"># ε ~ N(0,1)</span>
+    z = self.mean + self.std * epsilon
+    <span class="keyword">return</span> z
+            </div>
+            
+            <div class="example-calc">
+                <h4>Concrete Example (Channel 0)</h4>
+                <div class="calc-row">
+                    <span class="calc-label">mean (μ):</span>
+                    <span class="calc-value">0.5</span>
+                </div>
+                <div class="calc-row">
+                    <span class="calc-label">std (σ):</span>
+                    <span class="calc-value">0.606</span>
+                </div>
+                <div class="calc-row">
+                    <span class="calc-label">epsilon (ε):</span>
+                    <span class="calc-value">0.3 (random from N(0,1))</span>
+                </div>
+                <div style="border-top: 1px solid rgba(34, 197, 94, 0.3); margin: 10px 0; padding-top: 10px;">
+                    <div class="calc-row">
+                        <span class="calc-label">mode():</span>
+                        <span class="calc-value">z = 0.5</span>
+                    </div>
+                    <div class="calc-row">
+                        <span class="calc-label">sample():</span>
+                        <span class="calc-value">z = 0.5 + 0.606 × 0.3 = 0.682</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="tensor-box">
+                <div class="shape">Latent z: [1, 16, 1, 1, 1]</div>
+                <div class="dims">16 latent dimensions, compressed to a single spatial point</div>
+            </div>
+        </div>
+
+        <!-- Step 6: Decode -->
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">6</div>
+                <div class="step-title">Decode Back to Image</div>
+            </div>
+            
+            <p>The decoder takes the 16-channel latent and reconstructs the image:</p>
+            
+            <div class="tensor-box">
+                <div class="shape">[1, 16, 1, 1, 1] → [1, 3, 1, 8, 8]</div>
+                <div class="dims">1×1 spatial → 8×8 spatial (8× upsampling)</div>
+                <div class="dims">16 channels → 3 channels (RGB)</div>
+            </div>
+            
+            <div class="code">
+<span class="comment"># Decode process</span>
+x = self.<span class="func">post_quant_conv</span>(z)   <span class="comment"># [1, 16, 1, 1, 1] - 1×1 conv</span>
+out = self.<span class="func">decoder</span>(x)           <span class="comment"># [1, 3, 1, 8, 8] - upsample</span>
+out = torch.<span class="func">clamp</span>(out, -<span class="number">1.0</span>, <span class="number">1.0</span>)  <span class="comment"># clamp to valid range</span>
+            </div>
+        </div>
+
+        <!-- Step 7: Summary -->
+        <div class="step">
+            <div class="step-header">
+                <div class="step-number">✓</div>
+                <div class="step-title">Complete Data Flow Summary</div>
+            </div>
+            
+            <div class="final-diagram">
+                <div style="font-family: 'Fira Code', monospace; font-size: 0.9rem;">
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <span style="color: #3b82f6;">Image [1,3,1,8,8]</span>
+                    </div>
+                    
+                    <div style="text-align: center; color: #666;">│</div>
+                    <div style="text-align: center; color: #666;">▼ Encoder CNN</div>
+                    
+                    <div style="text-align: center; margin: 15px 0;">
+                        <span style="color: #8b5cf6;">[1, 32, 1, 1, 1]</span>
+                        <span style="color: #666;"> — 32 channels (μ + log σ²)</span>
+                    </div>
+                    
+                    <div style="text-align: center; color: #666;">│</div>
+                    <div style="text-align: center; color: #666;">▼ torch.chunk(2, dim=1)</div>
+                    
+                    <div style="display: flex; justify-content: center; gap: 40px; margin: 15px 0;">
+                        <div style="text-align: center;">
+                            <span style="color: #22c55e;">mean [1,16,1,1,1]</span>
+                        </div>
+                        <div style="text-align: center;">
+                            <span style="color: #f59e0b;">logvar [1,16,1,1,1]</span>
+                        </div>
+                    </div>
+                    
+                    <div style="text-align: center; color: #666;">│</div>
+                    <div style="text-align: center; color: #666;">▼ std = exp(logvar × 0.5)</div>
+                    
+                    <div style="text-align: center; margin: 15px 0;">
+                        <span style="color: #ec4899;">std [1, 16, 1, 1, 1]</span>
+                    </div>
+                    
+                    <div style="text-align: center; color: #666;">│</div>
+                    <div style="text-align: center; color: #666;">▼ z = μ + σ × ε (or just μ)</div>
+                    
+                    <div style="text-align: center; margin: 15px 0;">
+                        <span style="color: #f59e0b;">Latent z [1, 16, 1, 1, 1]</span>
+                    </div>
+                    
+                    <div style="text-align: center; color: #666;">│</div>
+                    <div style="text-align: center; color: #666;">▼ Decoder CNN</div>
+                    
+                    <div style="text-align: center; margin-top: 20px;">
+                        <span style="color: #06b6d4;">Reconstructed [1, 3, 1, 8, 8]</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="note">
+                <div class="note-title">Key Takeaways</div>
+                <ul style="margin-left: 20px; margin-top: 10px; line-height: 1.8;">
+                    <li>Encoder outputs <strong>2× latent channels</strong> (32) to represent both mean and variance</li>
+                    <li><code>torch.chunk(2, dim=1)</code> splits channels in half → mean (0-15) and logvar (16-31)</li>
+                    <li>std = exp(logvar × 0.5) converts log-variance to standard deviation</li>
+                    <li>Latent z is sampled using <strong>reparameterization trick</strong>: z = μ + σ × ε</li>
+                    <li>Decoder only needs 16 channels (the sampled latent), not 32</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

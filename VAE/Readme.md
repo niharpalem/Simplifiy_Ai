@@ -18,12 +18,13 @@ VAE = Autoencoder + **organized latent space**
 
 ## 📄 Files
 
-- [`vae_notes_detailed.html`](./vae_notes_detailed.html) — Full walkthrough with examples
-
+- [`vae_notes_detailed.html`](./vae_notes_detailed.html) — VAE high level walkthrough (Training)
+- [`vae_notes_detailed.html`](./vae_walkthrough.html) — Simple examplewalkthrough of how VAE works (Encoder -> latent space -> Deocoder)
 ## 🔗 Quick Links
 
 - [Interactive VAE Explainer](https://xnought.github.io/vae-explainer/) — Visual demo
 - [Claude Artifact Preview](https://claude.ai/public/artifacts/ca1a0c2c-f584-422f-b229-6a8a46fa4e80) — View online
+- [Claude Artifact VAE example walkthrough](https://claude.ai/public/artifacts/c8b0c755-aad4-4636-9926-d728b66d705f) — View online
 
 ## Tags
 
