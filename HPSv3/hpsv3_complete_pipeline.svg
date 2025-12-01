@@ -1,0 +1,250 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 2400" style="background: white;">
+  <defs>
+    <style>
+      .title { font: bold 36px sans-serif; fill: #667eea; }
+      .phase-title { font: bold 26px sans-serif; fill: white; text-anchor: middle; }
+      .section-title { font: bold 18px sans-serif; fill: #333; }
+      .text { font: 15px sans-serif; fill: #333; text-anchor: middle; }
+      .text-left { font: 15px sans-serif; fill: #333; text-anchor: start; }
+      .text-small { font: 13px sans-serif; fill: #666; text-anchor: middle; }
+      .text-small-left { font: 13px sans-serif; fill: #666; text-anchor: start; }
+      
+      .box-data { fill: #e3f2fd; stroke: #2196f3; stroke-width: 3; }
+      .box-filter { fill: #fff3e0; stroke: #ff9800; stroke-width: 3; }
+      .box-annotate { fill: #f3e5f5; stroke: #9c27b0; stroke-width: 3; }
+      .box-model { fill: #e8f5e9; stroke: #4caf50; stroke-width: 3; }
+      .box-train { fill: #fce4ec; stroke: #e91e63; stroke-width: 3; }
+      .box-cohp { fill: #fff9c4; stroke: #fbc02d; stroke-width: 3; }
+      .box-output { fill: #ffebee; stroke: #f44336; stroke-width: 3; }
+      
+      .phase-bar { fill: #667eea; }
+      .phase-bar-orange { fill: #ff9800; }
+      .phase-bar-purple { fill: #9c27b0; }
+      .phase-bar-green { fill: #4caf50; }
+      .phase-bar-pink { fill: #e91e63; }
+      .phase-bar-yellow { fill: #fbc02d; }
+      
+      .arrow { stroke: #667eea; stroke-width: 3; fill: none; marker-end: url(#arrowhead); }
+      .arrow-thick { stroke: #667eea; stroke-width: 5; fill: none; marker-end: url(#arrowhead-big); }
+      
+      .number-circle { fill: #667eea; stroke: white; stroke-width: 2; }
+      .number-text { font: bold 16px sans-serif; fill: white; text-anchor: middle; }
+    </style>
+    
+    <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#667eea" />
+    </marker>
+    
+    <marker id="arrowhead-big" markerWidth="14" markerHeight="14" refX="13" refY="3.5" orient="auto">
+      <polygon points="0 0, 14 3.5, 0 7" fill="#667eea" />
+    </marker>
+  </defs>
+  
+  <!-- Main Title -->
+  <text x="700" y="50" class="title">HPSv3: Complete Pipeline</text>
+  <text x="700" y="85" class="section-title">From Data Curation to Deployment</text>
+  
+  <!-- ============================================ -->
+  <!-- PHASE 1: DATA CURATION -->
+  <!-- ============================================ -->
+  
+  <rect x="50" y="130" width="1300" height="50" rx="10" class="phase-bar"/>
+  <text x="700" y="162" class="phase-title">PHASE 1: DATA CURATION (HPDv3 Dataset)</text>
+  
+  <!-- Three Data Sources - Better Spaced -->
+  <rect x="70" y="220" width="380" height="220" rx="10" class="box-data"/>
+  <text x="260" y="250" class="section-title">📊 Source 1: HPDv2 + 10 Models</text>
+  <text x="85" y="280" class="text-small-left">• Expand HPDv2 with new prompts</text>
+  <text x="85" y="305" class="text-small-left">• 10 SOTA models generate images:</text>
+  <text x="100" y="330" class="text-small-left">SDXL, Flux, SD3, Playground...</text>
+  <text x="85" y="355" class="text-small-left">• Diverse model capabilities</text>
+  <text x="85" y="380" class="text-small-left">• Different failure modes</text>
+  <text x="85" y="405" class="text-small-left">• Coverage of generation approaches</text>
+  <text x="85" y="430" class="text-small-left" font-weight="bold">✅ Variety in outputs</text>
+  
+  <rect x="510" y="220" width="380" height="220" rx="10" class="box-data"/>
+  <text x="700" y="250" class="section-title">📸 Source 2: Real Photos + VLM</text>
+  <text x="525" y="280" class="text-small-left">• Collect high-quality real photos</text>
+  <text x="525" y="305" class="text-small-left">• 12 categories organized:</text>
+  <text x="540" y="330" class="text-small-left">Animals, Architecture, Arts...</text>
+  <text x="525" y="355" class="text-small-left">• VLM generates captions</text>
+  <text x="525" y="380" class="text-small-left">• Gen AI creates synthetic versions</text>
+  <text x="525" y="405" class="text-small-left">• Compare: Real vs AI-generated</text>
+  <text x="525" y="430" class="text-small-left" font-weight="bold">✅ Real-world standards</text>
+  
+  <rect x="950" y="220" width="380" height="220" rx="10" class="box-data"/>
+  <text x="1140" y="250" class="section-title">🎨 Source 3: Midjourney</text>
+  <text x="965" y="280" class="text-small-left">• User-written prompts</text>
+  <text x="965" y="305" class="text-small-left">• 4 images generated per prompt</text>
+  <text x="965" y="330" class="text-small-left">• User selects favorite image</text>
+  <text x="965" y="355" class="text-small-left">• 331,955 user-generated images</text>
+  <text x="965" y="380" class="text-small-left">• Collected from Discord</text>
+  <text x="965" y="405" class="text-small-left">• Natural preference signals</text>
+  <text x="965" y="430" class="text-small-left" font-weight="bold">✅ Real user choices</text>
+  
+  <!-- Arrows to filtering - Cleaner paths -->
+  <path d="M 260 440 L 260 520" class="arrow"/>
+  <path d="M 700 440 L 700 520" class="arrow"/>
+  <path d="M 1140 440 L 1140 470 L 700 470 L 700 520" class="arrow"/>
+  
+  <!-- ============================================ -->
+  <!-- PHASE 2: FILTERING & CURATION -->
+  <!-- ============================================ -->
+  
+  <rect x="50" y="520" width="1300" height="50" rx="10" class="phase-bar-orange"/>
+  <text x="700" y="552" class="phase-title">PHASE 2: FILTERING & CURATION</text>
+  
+  <!-- Step 1 & 2 - Top Row -->
+  <rect x="150" y="610" width="480" height="150" rx="10" class="box-filter"/>
+  <circle cx="185" cy="635" r="18" class="number-circle"/>
+  <text x="185" y="642" class="number-text">1</text>
+  <text x="400" y="642" class="section-title">Prompt Categorization</text>
+  <text x="165" y="670" class="text-small-left">• Organize into 12 distinct categories:</text>
+  <text x="175" y="695" class="text-small-left">Animals, Architecture, Arts, Characters, Design,</text>
+  <text x="175" y="720" class="text-small-left">Food, Natural scenery, Plants, Products,</text>
+  <text x="175" y="745" class="text-small-left">Transportation, Science, Others</text>
+  
+  <rect x="700" y="610" width="480" height="150" rx="10" class="box-filter"/>
+  <circle cx="735" cy="635" r="18" class="number-circle"/>
+  <text x="735" y="642" class="number-text">2</text>
+  <text x="950" y="642" class="section-title">Distribution Alignment</text>
+  <text x="715" y="670" class="text-small-left">• Match JourneyDB prompt distribution</text>
+  <text x="715" y="695" class="text-small-left">• Each category reflects real-world usage</text>
+  <text x="715" y="720" class="text-small-left">• Balanced representation across categories</text>
+  <text x="715" y="745" class="text-small-left">✅ Authentic usage patterns</text>
+  
+  <!-- Step 3 & 4 - Bottom Row -->
+  <rect x="150" y="800" width="480" height="150" rx="10" class="box-filter"/>
+  <circle cx="185" cy="825" r="18" class="number-circle"/>
+  <text x="185" y="832" class="number-text">3</text>
+  <text x="400" y="832" class="section-title">Aesthetic Filtering</text>
+  <text x="165" y="860" class="text-small-left">• Aesthetic Predictor scores all images</text>
+  <text x="165" y="885" class="text-small-left">• Select top 10% per category</text>
+  <text x="165" y="910" class="text-small-left">• Prevents category bias</text>
+  <text x="165" y="935" class="text-small-left" font-weight="bold">✅ 57,759 high-quality images</text>
+  
+  <rect x="700" y="800" width="480" height="150" rx="10" class="box-filter"/>
+  <circle cx="735" cy="825" r="18" class="number-circle"/>
+  <text x="735" y="832" class="number-text">4</text>
+  <text x="950" y="832" class="section-title">Captioning & Generation</text>
+  <text x="715" y="860" class="text-small-left">• VLM generates detailed descriptions</text>
+  <text x="715" y="885" class="text-small-left">• Multiple generative models create images</text>
+  <text x="715" y="910" class="text-small-left">• Form pairwise comparisons</text>
+  <text x="715" y="935" class="text-small-left">✅ Ready for annotation</text>
+  
+  <!-- Arrows between steps -->
+  <path d="M 390 760 L 390 800" class="arrow"/>
+  <path d="M 940 760 L 940 800" class="arrow"/>
+  <path d="M 390 950 L 390 1010 L 700 1010" class="arrow"/>
+  <path d="M 940 950 L 940 1010 L 700 1010" class="arrow"/>
+  
+  <!-- ============================================ -->
+  <!-- PHASE 3: HUMAN ANNOTATION -->
+  <!-- ============================================ -->
+  
+  <rect x="50" y="1040" width="1300" height="50" rx="10" class="phase-bar-purple"/>
+  <text x="700" y="1072" class="phase-title">PHASE 3: HUMAN ANNOTATION</text>
+  
+  <!-- Annotator Qualification & Annotation Process -->
+  <rect x="100" y="1130" width="560" height="200" rx="10" class="box-annotate"/>
+  <text x="380" y="1160" class="section-title">👥 Annotator Qualification</text>
+  <text x="115" y="1190" class="text-small-left">1. Create validation set with 600 image pairs</text>
+  <text x="115" y="1215" class="text-small-left">2. Expert annotation by 20 professional artists</text>
+  <text x="115" y="1240" class="text-small-left">3. Achieve 80% convergence rate</text>
+  <text x="115" y="1265" class="text-small-left">4. New annotators must score ≥16/20 to qualify</text>
+  <text x="115" y="1290" class="text-small-left">5. Ongoing quality control measures</text>
+  <text x="115" y="1315" class="text-small-left" font-weight="bold">✅ Ensures annotator proficiency</text>
+  
+  <rect x="720" y="1130" width="560" height="200" rx="10" class="box-annotate"/>
+  <text x="1000" y="1160" class="section-title">📝 Annotation Process</text>
+  <text x="735" y="1190" class="text-small-left">• Each pair rated by 9-19 annotators</text>
+  <text x="735" y="1215" class="text-small-left">• Select preferred image from each pair</text>
+  <text x="735" y="1240" class="text-small-left">• Rating criteria: Aesthetics, Semantic</text>
+  <text x="750" y="1265" class="text-small-left">similarity to prompt, Overall coherence</text>
+  <text x="735" y="1290" class="text-small-left">• <tspan fill="#f44336" font-weight="bold">90% agreement threshold</tspan> required</text>
+  <text x="735" y="1315" class="text-small-left" font-weight="bold">✅ 1.17M high-confidence comparisons</text>
+  
+  <!-- Arrow to model training -->
+  <path d="M 700 1330 L 700 1410" class="arrow-thick"/>
+  
+  <!-- ============================================ -->
+  <!-- PHASE 4: MODEL TRAINING -->
+  <!-- ============================================ -->
+  
+  <rect x="50" y="1410" width="1300" height="50" rx="10" class="phase-bar-green"/>
+  <text x="700" y="1442" class="phase-title">PHASE 4: HPSv3 MODEL TRAINING</text>
+  
+  <!-- Architecture & Training Loss - Side by Side -->
+  <rect x="150" y="1500" width="480" height="190" rx="10" class="box-model"/>
+  <text x="390" y="1530" class="section-title">🏗️ Model Architecture</text>
+  <text x="165" y="1560" class="text-small-left"><tspan font-weight="bold">Input:</tspan> (Image, Text Prompt)</text>
+  <text x="240" y="1590" class="text-small-left">⬇</text>
+  <text x="165" y="1620" class="text-small-left"><tspan font-weight="bold">QWen2-VL Encoder</tspan></text>
+  <text x="175" y="1645" class="text-small-left">Powerful vision-language model</text>
+  <text x="240" y="1670" class="text-small-left">⬇</text>
+  <text x="165" y="1695" class="text-small-left"><tspan font-weight="bold">MLP →</tspan> μ (mean), σ (uncertainty)</text>
+  
+  <rect x="700" y="1500" width="550" height="190" rx="10" class="box-model"/>
+  <text x="975" y="1530" class="section-title">🎯 Uncertainty-Aware Ranking Loss</text>
+  <text x="715" y="1560" class="text-small-left"><tspan font-weight="bold">Traditional Approach:</tspan></text>
+  <text x="715" y="1585" class="text-small-left">• r ~ single fixed score</text>
+  <text x="715" y="1610" class="text-small-left">• Always equally confident (problematic)</text>
+  <text x="715" y="1640" class="text-small-left"><tspan font-weight="bold">Uncertainty-Aware Approach:</tspan></text>
+  <text x="715" y="1665" class="text-small-left">• r ~ N(μ, σ) Gaussian distribution</text>
+  <text x="715" y="1690" class="text-small-left">• Large σ = humans disagree (low confidence)</text>
+  <text x="715" y="1715" class="text-small-left">• Small σ = humans agree (high confidence)</text>
+  
+  <!-- Trained Model Output - Centered -->
+  <rect x="350" y="1730" width="700" height="90" rx="10" class="box-train"/>
+  <text x="700" y="1765" class="section-title">✅ Trained HPSv3 Model</text>
+  <text x="700" y="1795" class="text">Predicts human preference scores with uncertainty estimation</text>
+  <text x="700" y="1820" class="text-small">Ready for deployment and iterative refinement (CoHP)</text>
+  
+  <!-- Arrows -->
+  <path d="M 390 1690 L 390 1750 L 350 1750" class="arrow"/>
+  <path d="M 975 1690 L 975 1775 L 1050 1775" class="arrow"/>
+  <path d="M 700 1820 L 700 1900" class="arrow-thick"/>
+  
+  <!-- ============================================ -->
+  <!-- PHASE 5: CoHP (RL APPLICATION) -->
+  <!-- ============================================ -->
+  
+  <rect x="50" y="1900" width="1300" height="50" rx="10" class="phase-bar-yellow"/>
+  <text x="700" y="1932" class="phase-title">PHASE 5: Chain of Human Preference (CoHP)</text>
+  
+  <!-- Stage 1 & 2 - Better Organized -->
+  <rect x="100" y="1990" width="580" height="230" rx="10" class="box-cohp"/>
+  <text x="390" y="2020" class="section-title">⭐ Stage 1: Model-wise Preference</text>
+  <text x="115" y="2050" class="text-small-left"><tspan font-weight="bold">Goal:</tspan> Select the best model for the given prompt</text>
+  <text x="115" y="2080" class="text-small-left"><tspan font-weight="bold">Process:</tspan></text>
+  <text x="130" y="2105" class="text-small-left">1. Each candidate model generates N images</text>
+  <text x="130" y="2130" class="text-small-left">2. HPSv3 scores all generated images</text>
+  <text x="130" y="2155" class="text-small-left">3. Calculate average score: r̄ᵢ = (1/N) Σ rᵢ,ⱼ</text>
+  <text x="130" y="2180" class="text-small-left">4. Select golden model: m* = argmax(r̄ᵢ)</text>
+  <text x="115" y="2210" class="text-small-left" font-weight="bold">✅ Optimal model for this specific prompt</text>
+  
+  <rect x="720" y="1990" width="580" height="230" rx="10" class="box-cohp"/>
+  <text x="1010" y="2020" class="section-title">🔄 Stage 2: Sample-wise Preference</text>
+  <text x="735" y="2050" class="text-small-left"><tspan font-weight="bold">Goal:</tspan> Iteratively refine image quality</text>
+  <text x="735" y="2080" class="text-small-left"><tspan font-weight="bold">Process:</tspan></text>
+  <text x="750" y="2105" class="text-small-left">1. Golden model m* generates B images (batch)</text>
+  <text x="750" y="2130" class="text-small-left">2. HPSv3 evaluates and selects winner</text>
+  <text x="750" y="2155" class="text-small-left">3. Add noise to winner + original prompt</text>
+  <text x="750" y="2180" class="text-small-left">4. Use as input for next round, repeat S times</text>
+  <text x="735" y="2210" class="text-small-left" font-weight="bold">✅ Progressive quality improvement</text>
+  
+  <!-- Arrow between stages -->
+  <path d="M 680 2105 L 720 2105" class="arrow"/>
+  
+  <!-- Final Output - Centered -->
+  <rect x="350" y="2260" width="700" height="110" rx="10" class="box-output"/>
+  <text x="700" y="2295" class="section-title">🏆 Final Output: Best Quality Image</text>
+  <text x="700" y="2325" class="text">I* = argmax(rₙ,ₖ) across ALL rounds</text>
+  <text x="700" y="2350" class="text-small">Select the single best image from all refinement rounds</text>
+  <text x="700" y="2375" class="text-small" font-weight="bold">Result: Highest quality image aligned with human preferences</text>
+  
+  <!-- Arrows to final -->
+  <path d="M 390 2220 L 390 2290 L 350 2290" class="arrow"/>
+  <path d="M 1010 2220 L 1010 2315 L 1050 2315" class="arrow"/>
+  
+</svg>
