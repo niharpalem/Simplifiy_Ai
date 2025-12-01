@@ -169,7 +169,7 @@ flowchart TD
     
     style Knowledge fill:#E6E6FA,stroke:#333,stroke-width:3px,color:#000
     style Output fill:#90EE90,stroke:#333,stroke-width:4px,color:#000
-
+'''
     
 ## 🧠 The Core Insight
 
