@@ -4,7 +4,7 @@
 **Date:** December 1, 2025
 
 ```mermaid
-%%{init: {'theme':'base', 'themeVariables': { 'fontSize':'13px', 'fontFamily':'arial'}, 'flowchart':{'nodeSpacing': 50, 'rankSpacing': 100, 'padding': 20, 'useMaxWidth':true}}}%%
+%%{init: {'theme':'base', 'themeVariables': { 'fontSize':'13px', 'fontFamily':'arial', 'lineColor':'#888', 'primaryColor':'#fff', 'primaryBorderColor':'#888'}, 'flowchart':{'nodeSpacing': 50, 'rankSpacing': 100, 'padding': 20, 'useMaxWidth':true, 'curve':'basis'}}}%%
 flowchart TD
     Start["<b>HPSv3: Complete Pipeline</b><br/><br/>From Data Curation to Deployment"]
     
@@ -80,7 +80,7 @@ flowchart TD
     %% STYLING
     %% ==========================================
     
-    classDef titleStyle fill:#667eea,stroke:#667eea,color:#fff,stroke-width:4px,padding:20px
+    classDef titleStyle fill:#667eea,stroke:#888,color:#fff,stroke-width:4px,padding:20px
     classDef dataStyle fill:#e3f2fd,stroke:#2196f3,stroke-width:4px,color:#333,padding:20px
     classDef filterStyle fill:#fff3e0,stroke:#ff9800,stroke-width:4px,color:#333,padding:20px
     classDef annotateStyle fill:#f3e5f5,stroke:#9c27b0,stroke-width:4px,color:#333,padding:20px
@@ -88,11 +88,11 @@ flowchart TD
     classDef trainStyle fill:#fce4ec,stroke:#e91e63,stroke-width:4px,color:#333,padding:20px
     classDef cohpStyle fill:#fff9c4,stroke:#fbc02d,stroke-width:4px,color:#333,padding:20px
     classDef outputStyle fill:#ffebee,stroke:#f44336,stroke-width:4px,color:#333,padding:20px
-    classDef phaseStyle fill:#667eea,stroke:#667eea,color:#fff,stroke-width:4px,padding:20px
-    classDef phase2Style fill:#ff9800,stroke:#ff9800,color:#fff,stroke-width:4px,padding:20px
-    classDef phase3Style fill:#9c27b0,stroke:#9c27b0,color:#fff,stroke-width:4px,padding:20px
-    classDef phase4Style fill:#4caf50,stroke:#4caf50,color:#fff,stroke-width:4px,padding:20px
-    classDef phase5Style fill:#fbc02d,stroke:#fbc02d,color:#fff,stroke-width:4px,padding:20px
+    classDef phaseStyle fill:#667eea,stroke:#888,color:#fff,stroke-width:4px,padding:20px
+    classDef phase2Style fill:#ff9800,stroke:#888,color:#fff,stroke-width:4px,padding:20px
+    classDef phase3Style fill:#9c27b0,stroke:#888,color:#fff,stroke-width:4px,padding:20px
+    classDef phase4Style fill:#4caf50,stroke:#888,color:#fff,stroke-width:4px,padding:20px
+    classDef phase5Style fill:#fbc02d,stroke:#888,color:#333,stroke-width:4px,padding:20px
     
     class Start titleStyle
     class P1 phaseStyle
@@ -107,6 +107,11 @@ flowchart TD
     class P5 phase5Style
     class C1,C2 cohpStyle
     class Final outputStyle
+    
+    %% Style arrows for visibility in dark mode
+    linkStyle default stroke:#888,stroke-width:3px
+    
+  
 ```
 ## 🎯 TLDR
 
