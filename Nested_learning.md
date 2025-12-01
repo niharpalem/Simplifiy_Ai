@@ -2,7 +2,6 @@
 # Nested Learning: The Illusion of Deep Learning Architectures
 
 **Paper by Google Research (NeurIPS 2025)**  
-**Simplify_AI Breakdown**
 
 ---
 
@@ -235,5 +234,5 @@ Includes:
 
 ---
 
-**Created by Simplify_AI** - Making Research Accessible  
+**Created by Simplifiy_AI** - Making Research Accessible  
 **Date:** November 2025
