@@ -2,17 +2,17 @@
 
 **Paper:** [arxiv.org/pdf/2508.03789](https://arxiv.org/pdf/2508.03789)  
 **Date:** December 1, 2025
-%%{init: {'theme':'base', 'themeVariables': { 'fontSize':'14px'}}}%%
+
 ```mermaid
 graph TD
     %% Styling
-    classDef dataStyle fill:#e3f2fd,stroke:#2196f3,stroke-width:3px
-    classDef filterStyle fill:#fff3e0,stroke:#ff9800,stroke-width:3px
-    classDef annotateStyle fill:#f3e5f5,stroke:#9c27b0,stroke-width:3px
-    classDef modelStyle fill:#e8f5e9,stroke:#4caf50,stroke-width:3px
-    classDef trainStyle fill:#fce4ec,stroke:#e91e63,stroke-width:3px
-    classDef cohpStyle fill:#fff9c4,stroke:#fbc02d,stroke-width:3px
-    classDef outputStyle fill:#ffebee,stroke:#f44336,stroke-width:3px
+    classDef dataStyle fill:#e3f2fd,stroke:#2196f3,stroke-width:1px
+    classDef filterStyle fill:#fff3e0,stroke:#ff9800,stroke-width:1px
+    classDef annotateStyle fill:#f3e5f5,stroke:#9c27b0,stroke-width:1px
+    classDef modelStyle fill:#e8f5e9,stroke:#4caf50,stroke-width:1px
+    classDef trainStyle fill:#fce4ec,stroke:#e91e63,stroke-width:1px
+    classDef cohpStyle fill:#fff9c4,stroke:#fbc02d,stroke-width:1px
+    classDef outputStyle fill:#ffebee,stroke:#f44336,stroke-width:1px
     
     %% Title
     Start[📝 Input: Text Prompt for Image Generation]
