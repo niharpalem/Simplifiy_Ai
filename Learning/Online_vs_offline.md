@@ -45,6 +45,7 @@ flowchart TB
 
 ```mermaid
 flowchart TD
+    %%{init: {'themeVariables': {'fontSize': '14px'}}}%%
     Q{{"Does model generate new outputs during training?"}}
     
     Q -->|No| OFF["OFFLINE"]
