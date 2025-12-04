@@ -18,25 +18,25 @@ A visual guide to understanding when models generate during training vs learning
 ## Flowchart Overview
 
 ```mermaid
-flowchart LR
-    subgraph OFFLINE["🗄️ OFFLINE LEARNING"]
+flowchart TB
+    subgraph OFF["OFFLINE LEARNING"]
         direction TB
-        O1[1️⃣ Collect data FIRST]
-        O2[2️⃣ Train on fixed dataset]
-        O3[3️⃣ No generation during training]
+        O1["1. Collect data FIRST"]
+        O2["2. Train on fixed dataset"]
+        O3["3. No generation during training"]
         O1 --> O2 --> O3
     end
     
-    subgraph ONLINE["🔄 ONLINE LEARNING"]
+    subgraph ON["ONLINE LEARNING"]
         direction TB
-        N1[1️⃣ Generate DURING training]
-        N2[2️⃣ Get immediate feedback]
-        N3[3️⃣ Constant interaction]
+        N1["1. Generate DURING training"]
+        N2["2. Get immediate feedback"]
+        N3["3. Constant interaction"]
         N1 --> N2 --> N3
     end
     
-    style OFFLINE fill:#e0f7fa,stroke:#00838f
-    style ONLINE fill:#fce4ec,stroke:#c2185b
+    style OFF fill:#e0f7fa,stroke:#00838f
+    style ON fill:#fce4ec,stroke:#c2185b
 ```
 
 ---
@@ -45,16 +45,16 @@ flowchart LR
 
 ```mermaid
 flowchart TD
-    Q["❓ Does the model generate<br/>new outputs during training?"]
+    Q{{"Does model generate new outputs during training?"}}
     
-    Q -->|"❌ No - Uses pre-collected data"| OFF[OFFLINE]
-    Q -->|"✅ Yes - Generates & learns"| ON[ONLINE]
+    Q -->|No| OFF["OFFLINE"]
+    Q -->|Yes| ON["ONLINE"]
     
-    OFF --> OFF_EX["SFT, Pretraining,<br/>Offline RL"]
-    ON --> ON_EX["RLHF, Online DPO,<br/>Active Learning"]
+    OFF --> OFF_EX["SFT, Pretraining, Offline RL"]
+    ON --> ON_EX["RLHF, Online DPO, Active Learning"]
     
-    style OFF fill:#e0f7fa
-    style ON fill:#fce4ec
+    style OFF fill:#e0f7fa,stroke:#00838f
+    style ON fill:#fce4ec,stroke:#c2185b
 ```
 
 ---
@@ -65,21 +65,21 @@ The model learns from a **fixed dataset** collected before training begins.
 
 ```mermaid
 flowchart LR
-    subgraph Phase1["📦 Phase 1: Data Collection (Once)"]
-        A[Generate images] --> B[Human annotation]
-        B --> C[Store in dataset]
+    subgraph P1["Phase 1: Data Collection"]
+        A["Generate images"] --> B["Human annotates"]
+        B --> C["Store in dataset"]
     end
     
-    subgraph Phase2["🎯 Phase 2: Training (Many epochs)"]
-        D[Load fixed dataset] --> E[Compute loss]
-        E --> F[Update model]
-        F --> D
+    subgraph P2["Phase 2: Training"]
+        D["Load dataset"] --> E["Compute loss"]
+        E --> F["Update model"]
+        F -.->|repeat| D
     end
     
-    Phase1 --> Phase2
+    P1 --> P2
     
-    style Phase1 fill:#b2ebf2
-    style Phase2 fill:#e0f7fa
+    style P1 fill:#b2ebf2,stroke:#00838f
+    style P2 fill:#e0f7fa,stroke:#00838f
 ```
 
 ### Advantages
@@ -115,15 +115,15 @@ The model **generates new outputs at each training step** and learns from immedi
 
 ```mermaid
 flowchart LR
-    subgraph Loop["🔄 Training Loop (Every Step)"]
-        A[Sample prompt] --> B[Generate with<br/>CURRENT model]
-        B --> C[Get feedback<br/>reward model / human]
-        C --> D[Compute loss]
-        D --> E[Update model]
-        E --> A
+    subgraph LOOP["Training Loop - Every Step"]
+        A["Sample prompt"] --> B["Generate with current model"]
+        B --> C["Get feedback"]
+        C --> D["Compute loss"]
+        D --> E["Update model"]
+        E -.->|repeat| A
     end
     
-    style Loop fill:#fce4ec
+    style LOOP fill:#fce4ec,stroke:#c2185b
 ```
 
 ### Advantages
@@ -163,22 +163,46 @@ for training_step in steps:
 
 ```mermaid
 flowchart TD
-    START[Choose Training Approach] --> Q1{Have large<br/>existing dataset?}
+    START(["Choose Training Approach"]) --> Q1{"Have large dataset?"}
     
-    Q1 -->|Yes| Q2{Need model to<br/>adapt during training?}
-    Q1 -->|No| ONLINE[Online Learning 🔄]
+    Q1 -->|Yes| Q2{"Need adaptation?"}
+    Q1 -->|No| ON["ONLINE"]
     
-    Q2 -->|No| OFFLINE[Offline Learning 🗄️]
-    Q2 -->|Yes| Q3{Budget for<br/>compute?}
+    Q2 -->|No| OFF["OFFLINE"]
+    Q2 -->|Yes| Q3{"Compute budget?"}
     
-    Q3 -->|Limited| OFFLINE
-    Q3 -->|Available| ONLINE
+    Q3 -->|Limited| OFF
+    Q3 -->|Available| ON
     
-    OFFLINE --> EX1["SFT, DPO, Pretraining"]
-    ONLINE --> EX2["RLHF, Online DPO, PPO"]
+    OFF --> EX1["SFT, DPO, Pretraining"]
+    ON --> EX2["RLHF, Online DPO, PPO"]
     
-    style OFFLINE fill:#e0f7fa
-    style ONLINE fill:#fce4ec
+    style OFF fill:#e0f7fa,stroke:#00838f
+    style ON fill:#fce4ec,stroke:#c2185b
+    style START fill:#fff,stroke:#333
+```
+
+---
+
+## Side-by-Side Comparison
+
+```mermaid
+flowchart TB
+    subgraph OFFLINE["OFFLINE"]
+        direction LR
+        A1[("Dataset")] --> A2["Model"]
+        A2 --> A3(["Trained Model"])
+    end
+    
+    subgraph ONLINE["ONLINE"]
+        direction LR
+        B1["Model"] --> B2(["Output"])
+        B2 --> B3{{"Reward"}}
+        B3 --> B1
+    end
+    
+    style OFFLINE fill:#e0f7fa,stroke:#00838f
+    style ONLINE fill:#fce4ec,stroke:#c2185b
 ```
 
 ---
@@ -207,3 +231,4 @@ flowchart TD
 - Slower, expensive, but more personalized
 
 ---
+
