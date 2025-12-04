@@ -45,7 +45,7 @@ flowchart TB
 ## The Core Difference
 
 ```mermaid
-%%{init: {'themeVariables': {'fontSize': '14px'}}}%%
+%%{init: {'themeVariables': {'fontSize': '10px'}}}%%
 flowchart TD
     %%{init: {'themeVariables': {'fontSize': '14px'}}}%%
     Q{{"Does model generate new outputs during training?"}}
