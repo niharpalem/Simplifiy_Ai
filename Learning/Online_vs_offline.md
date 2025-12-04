@@ -18,6 +18,7 @@ A visual guide to understanding when models generate during training vs learning
 ## Flowchart Overview
 
 ```mermaid
+%%{init: {'themeVariables': {'fontSize': '14px'}}}%%
 flowchart TB
     subgraph OFF["OFFLINE LEARNING"]
         direction TB
@@ -44,6 +45,7 @@ flowchart TB
 ## The Core Difference
 
 ```mermaid
+%%{init: {'themeVariables': {'fontSize': '14px'}}}%%
 flowchart TD
     %%{init: {'themeVariables': {'fontSize': '14px'}}}%%
     Q{{"Does model generate new outputs during training?"}}
@@ -65,6 +67,7 @@ flowchart TD
 The model learns from a **fixed dataset** collected before training begins.
 
 ```mermaid
+%%{init: {'themeVariables': {'fontSize': '14px'}}}%%
 flowchart LR
     subgraph P1["Phase 1: Data Collection"]
         A["Generate images"] --> B["Human annotates"]
@@ -115,6 +118,7 @@ for epoch in epochs:
 The model **generates new outputs at each training step** and learns from immediate feedback.
 
 ```mermaid
+%%{init: {'themeVariables': {'fontSize': '14px'}}}%%
 flowchart LR
     subgraph LOOP["Training Loop - Every Step"]
         A["Sample prompt"] --> B["Generate with current model"]
@@ -163,6 +167,7 @@ for training_step in steps:
 ## Decision Flowchart
 
 ```mermaid
+%%{init: {'themeVariables': {'fontSize': '14px'}}}%%
 flowchart TD
     START(["Choose Training Approach"]) --> Q1{"Have large dataset?"}
     
@@ -188,6 +193,7 @@ flowchart TD
 ## Side-by-Side Comparison
 
 ```mermaid
+%%{init: {'themeVariables': {'fontSize': '14px'}}}%%
 flowchart TB
     subgraph OFFLINE["OFFLINE"]
         direction LR
