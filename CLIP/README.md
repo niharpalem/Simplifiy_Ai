@@ -85,7 +85,7 @@ graph TD
 
 ## 🔗 Quick Links
 
-- [In-depth Article](CLIP_article.html) - Detailed breakdown with examples
+- [In-depth Article](https://claude.ai/public/artifacts/e1e7d822-be5d-4976-ad4a-0a634fb59a79) - Detailed breakdown with examples
 - [Original Paper](https://arxiv.org/abs/2103.00020)
 - [OpenAI Blog](https://openai.com/research/clip)
 
