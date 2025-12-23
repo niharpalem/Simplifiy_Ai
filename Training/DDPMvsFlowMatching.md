@@ -1,5 +1,5 @@
 # Flow Matching vs Traditional Diffusion: A Clear Breakdown
-
+📎 **[Interactive Article](https://claude.ai/public/artifacts/c4a942ef-0be4-4e30-9553-06081db72904)**
 ## 🎯 What This Article Covers
 
 This guide explains the difference between **Traditional Diffusion Models (DDPM)** and **Flow Matching** — two approaches for generating images from noise. We'll use concrete math examples to make everything crystal clear.
